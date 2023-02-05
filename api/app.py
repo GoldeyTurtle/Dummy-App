@@ -34,4 +34,7 @@ def set_configuration_for_app():
 
 if __name__ == '__main__':
     set_configuration_for_app()
-    app.run()
+    if not app.config['DISABLE_SQS_SEND']:
+        app.run(host="0.0.0.0")
+    else:
+        app.run()
