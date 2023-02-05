@@ -15,3 +15,6 @@ fi
 
 source app_venv/bin/activate
 python app.py
+
+# call python app.py and send output to log file and send it to the background
+python app.py > /var/log/app.log 2>&1 &
