@@ -7,6 +7,11 @@ app = Flask(__name__)
 sqs_client = boto3.client('sqs')
 
 
+@app.route('/api/health', methods=['GET'])
+def healthcheck():
+    return 'Hello from the dummy app', 200
+
+
 @app.route('/api/message', methods=['POST'])
 def index():
     if request.is_json:
