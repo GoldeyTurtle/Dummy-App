@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 echo "starting run script"
 
@@ -10,11 +11,12 @@ if [ -f .env ]; then
 else
   TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
   # TODO this is a hack for local testing, we should pull the queue URL from secrets manager or parameter store
-  curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/tags/instance/QUEUE_URL
+  QUEUE_URL=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/tags/instance/QUEUE_URL)
 fi
 
-source app_venv/bin/activate
-python app.py
+echo "QUEUE_URL = ${QUEUE_URL}"
+
+sudo touch /var/log/app.log && sudo chown ec2-user /var/log/app.log
 
 # call python app.py and send output to log file and send it to the background
-python app.py > /var/log/app.log 2>&1 &
+app_venv/bin/python app.py > /var/log/app.log 2>&1 &
