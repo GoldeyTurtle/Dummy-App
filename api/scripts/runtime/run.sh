@@ -11,7 +11,7 @@ if [ -f .env ]; then
 else
   TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
   # TODO this is a hack for local testing, we should pull the queue URL from secrets manager or parameter store
-  export QUEUE_URL=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/tags/instance/QUEUE_URL)
+  export SQS_QUEUE_URL=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/tags/instance/QUEUE_URL)
   export AWS_DEFAULT_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/placement/region)
 fi
 
